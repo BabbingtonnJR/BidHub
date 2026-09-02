@@ -1,0 +1,375 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #14171f;
+  --surface: #1b1f2a;
+  --surface-2: #232838;
+  --border: #2e3444;
+  --border-soft: #262c3b;
+  --ivory: #ede8de;
+  --ivory-dim: #a9a69c;
+  --brass: #c3985f;
+  --brass-dim: #8c6f45;
+  --brass-text: #e8c592;
+  --burgundy: #a34848;
+  --burgundy-bg: #3a2226;
+  --green: #6f9d6a;
+  --green-bg: #22301f;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ivory);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 40px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--ivory);
+}
+
+.brand span {
+  color: var(--brass-text);
+}
+
+nav.tabs {
+  display: flex;
+  gap: 4px;
+}
+
+nav.tabs button {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--ivory-dim);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+nav.tabs button.active {
+  color: var(--ivory);
+  border-color: var(--border);
+  background: var(--surface-2);
+}
+
+main {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.view { display: none; }
+.view.active { display: block; }
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 30px;
+  margin: 0 0 6px;
+}
+
+.page-header p {
+  color: var(--ivory-dim);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ---------- catálogo ---------- */
+
+.catalogo-list {
+  border-top: 1px solid var(--border-soft);
+}
+
+.lote-row {
+  display: grid;
+  grid-template-columns: 56px 64px 1fr auto auto;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 4px;
+  border-bottom: 1px solid var(--border-soft);
+  cursor: pointer;
+}
+
+.lote-row:hover { background: var(--surface); }
+
+.lote-numero {
+  font-family: 'Fraunces', serif;
+  color: var(--ivory-dim);
+  font-size: 14px;
+}
+
+.lote-imagem {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.lote-info .titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  margin: 0 0 4px;
+}
+
+.lote-info .meta {
+  font-size: 13px;
+  color: var(--ivory-dim);
+}
+
+.lote-valor {
+  text-align: right;
+}
+
+.lote-valor .label {
+  font-size: 12px;
+  color: var(--ivory-dim);
+}
+
+.lote-valor .valor {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+}
+
+.status-pill {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.status-pill.ao-vivo {
+  background: var(--burgundy-bg);
+  color: #e6a3a3;
+}
+
+.status-pill.agendado {
+  background: var(--surface-2);
+  color: var(--ivory-dim);
+  border: 1px solid var(--border);
+}
+
+.status-pill.encerrado {
+  background: var(--green-bg);
+  color: #a8c9a3;
+}
+
+.loading, .empty {
+  color: var(--ivory-dim);
+  font-size: 14px;
+  padding: 30px 0;
+}
+
+/* ---------- leilão ao vivo ---------- */
+
+.live-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 28px;
+}
+
+.stage {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.stage-media {
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(180deg, #20242f, #171a22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 72px;
+  position: relative;
+}
+
+.live-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--burgundy-bg);
+  color: #e6a3a3;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 100px;
+}
+
+.live-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e6a3a3;
+}
+
+.viewers {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0,0,0,0.4);
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 100px;
+  color: var(--ivory);
+}
+
+.stage-details {
+  padding: 20px 22px;
+  border-top: 1px solid var(--border);
+}
+
+.stage-details .titulo {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  margin: 0 0 6px;
+}
+
+.stage-details .meta {
+  font-size: 13px;
+  color: var(--ivory-dim);
+}
+
+.bid-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px;
+  height: fit-content;
+}
+
+.bid-current .label {
+  font-size: 12px;
+  color: var(--ivory-dim);
+}
+
+.bid-current .valor {
+  font-family: 'Fraunces', serif;
+  font-size: 34px;
+  margin: 4px 0 2px;
+  color: var(--brass-text);
+}
+
+.bid-current .incremento {
+  font-size: 12px;
+  color: var(--ivory-dim);
+}
+
+.bid-form {
+  display: flex;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.bid-form input {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--ivory);
+  font-size: 14px;
+  padding: 10px 12px;
+  font-family: 'Inter', sans-serif;
+}
+
+.bid-form input:focus {
+  outline: none;
+  border-color: var(--brass-dim);
+}
+
+.bid-form button {
+  background: var(--brass);
+  border: none;
+  color: #1b1204;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 0 18px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.bid-form button:hover { background: var(--brass-text); }
+
+.bid-error {
+  font-size: 12px;
+  color: #e6a3a3;
+  margin: -12px 0 14px;
+}
+
+.bid-history h3 {
+  font-size: 13px;
+  color: var(--ivory-dim);
+  font-weight: 500;
+  margin: 22px 0 10px;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 18px;
+}
+
+.bid-history ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.bid-history li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.bid-history .u { color: var(--ivory-dim); }
+.bid-history .v { font-family: 'Fraunces', serif; }
+.bid-history .t { color: var(--ivory-dim); font-size: 12px; }
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: var(--ivory-dim);
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.back-link:hover { color: var(--ivory); }
+
+.source-note {
+  margin-top: 30px;
+  font-size: 12px;
+  color: var(--ivory-dim);
+  border-top: 1px solid var(--border-soft);
+  padding-top: 14px;
+}
