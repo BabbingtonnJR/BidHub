@@ -1,10 +1,10 @@
-# BidHub — frontend (PJBL)
+# BidHub - frontend (PJBL)
 
 Frontend de demonstração do BidHub, plataforma de leilões ao vivo. Duas telas:
 
-1. **Catálogo de leilões** (`view-catalogo`) — lista leilões ao vivo, agendados
+1. **Catálogo de leilões** (`view-catalogo`) - lista leilões ao vivo, agendados
    e encerrados. Consome um GET em uma Azure Function (dados mock).
-2. **Leilão ao vivo** (`view-live`) — lote em destaque, lance atual, formulário
+2. **Leilão ao vivo** (`view-live`) - lote em destaque, lance atual, formulário
    de lance (simulado) e histórico de lances.
 
 ## Como rodar localmente
@@ -37,7 +37,7 @@ bidhub/
 ├── index.html
 ├── css/styles.css
 ├── js/app.js
-├── data/leiloes.json   # mock local (fallback)
+├── data/leiloes.json   # mock local
 ├── data/lances.json    # mock do histórico de lances
 ├── GRUPO.md
 ├── Prompt.md
