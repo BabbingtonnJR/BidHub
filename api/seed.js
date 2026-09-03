@@ -1,6 +1,7 @@
-const { app } = require("@azure/functions");
+require("dotenv").config();
+const { MongoClient } = require("mongodb");
 
-const leiloes = [
+const leiloesIniciais = [
   {
     id: 1,
     lote: "001",
@@ -59,15 +60,26 @@ const leiloes = [
   },
 ];
 
-app.http("leiloes", {
-  methods: ["GET"],
-  authLevel: "anonymous",
-  route: "leiloes",
-  handler: async (request, context) => {
-    context.log("GET /api/leiloes chamado");
-    return {
-      status: 200,
-      jsonBody: leiloes,
-    };
-  },
+async function seed() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    console.error("Defina MONGODB_URI como variável de ambiente antes de rodar (ver instruções abaixo).");
+    process.exit(1);
+  }
+
+  const client = new MongoClient(uri);
+  await client.connect();
+  const db = client.db("bidhub");
+  const colecao = db.collection("leiloes");
+
+  await colecao.deleteMany({});
+  await colecao.insertMany(leiloesIniciais);
+
+  console.log(`${leiloesIniciais.length} leilões inseridos com sucesso.`);
+  await client.close();
+}
+
+seed().catch((err) => {
+  console.error("Erro ao popular o banco:", err);
+  process.exit(1);
 });

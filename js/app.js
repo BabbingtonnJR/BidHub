@@ -3,7 +3,7 @@ const ENDPOINT_LEILOES = "/api/leiloes";
 const state = {
   leiloes: [],
   leilaoAtivo: null,
-  lances: [],
+  formAberto: false,
 };
 
 const fmt = (v) =>
@@ -11,19 +11,64 @@ const fmt = (v) =>
 
 const statusLabel = { "ao-vivo": "Ao vivo agora", agendado: "Agendado", encerrado: "Encerrado" };
 
-async function fetchLeiloes() {
+// ---------- chamadas às Azure Functions ----------
+
+async function apiListarLeiloes() {
   const res = await fetch(ENDPOINT_LEILOES);
   if (!res.ok) throw new Error(`Falha ao buscar leilões (${res.status})`);
   return res.json();
 }
 
-async function fetchLances() {
-  const res = await fetch("data/lances.json");
-  if (!res.ok) return [];
-  return res.json();
+async function apiCriarLeilao(dados) {
+  const res = await fetch(ENDPOINT_LEILOES, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados),
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.erro || `Falha ao criar leilão (${res.status})`);
+  return body;
+}
+
+async function apiAtualizarLance(id, lanceAtual) {
+  const res = await fetch(`${ENDPOINT_LEILOES}/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ lanceAtual }),
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.erro || `Falha ao dar lance (${res.status})`);
+  return body;
+}
+
+async function apiAtualizarStatus(id, status) {
+  const res = await fetch(`${ENDPOINT_LEILOES}/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.erro || `Falha ao atualizar status (${res.status})`);
+  return body;
+}
+
+async function apiExcluirLeilao(id) {
+  const res = await fetch(`${ENDPOINT_LEILOES}/${id}`, { method: "DELETE" });
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.erro || `Falha ao excluir leilão (${res.status})`);
+  return body;
+}
+
+// ---------- catálogo ----------
+
+async function carregarCatalogo() {
+  state.leiloes = await apiListarLeiloes();
+  renderCatalogo();
 }
 
 function renderCatalogo() {
+  renderFormNovoLeilao();
+
   const list = document.getElementById("catalogo-list");
   if (!state.leiloes.length) {
     list.innerHTML = `<p class="empty">Nenhum leilão disponível no momento.</p>`;
@@ -43,22 +88,110 @@ function renderCatalogo() {
         <p class="label">Lance atual</p>
         <p class="valor">${fmt(l.lanceAtual)}</p>
       </div>
-      <span class="status-pill ${l.status}">${statusLabel[l.status]}</span>
+      <select class="status-select ${l.status}" data-id="${l.id}">
+        <option value="ao-vivo" ${l.status === "ao-vivo" ? "selected" : ""}>Ao vivo agora</option>
+        <option value="agendado" ${l.status === "agendado" ? "selected" : ""}>Agendado</option>
+        <option value="encerrado" ${l.status === "encerrado" ? "selected" : ""}>Encerrado</option>
+      </select>
+      <button class="btn-excluir" data-id="${l.id}" title="Excluir leilão">✕</button>
     </div>`
     )
     .join("");
 
   list.querySelectorAll(".lote-row").forEach((row) => {
-    row.addEventListener("click", () => {
-      const id = Number(row.dataset.id);
-      abrirLeilao(id);
+    row.addEventListener("click", (e) => {
+      if (e.target.closest(".btn-excluir") || e.target.closest(".status-select")) return;
+      abrirLeilao(Number(row.dataset.id));
+    });
+  });
+
+  list.querySelectorAll(".status-select").forEach((select) => {
+    select.addEventListener("click", (e) => e.stopPropagation());
+    select.addEventListener("change", async (e) => {
+      const id = Number(select.dataset.id);
+      const novoStatus = select.value;
+      try {
+        await apiAtualizarStatus(id, novoStatus);
+        await carregarCatalogo();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+  });
+
+  list.querySelectorAll(".btn-excluir").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const id = Number(btn.dataset.id);
+      if (!confirm(`Excluir o lote ${id}? Essa ação não pode ser desfeita.`)) return;
+      try {
+        await apiExcluirLeilao(id);
+        await carregarCatalogo();
+      } catch (err) {
+        alert(err.message);
+      }
     });
   });
 }
 
+function renderFormNovoLeilao() {
+  const container = document.getElementById("novo-leilao-container");
+
+  if (!state.formAberto) {
+    container.innerHTML = `<button class="btn-novo" id="btn-abrir-form">+ Novo leilão</button>`;
+    document.getElementById("btn-abrir-form").addEventListener("click", () => {
+      state.formAberto = true;
+      renderFormNovoLeilao();
+    });
+    return;
+  }
+
+  container.innerHTML = `
+    <form class="novo-leilao-form" id="novo-leilao-form">
+      <div class="grid-2">
+        <input name="lote" placeholder="Nº do lote (ex: 005)" required />
+        <input name="categoria" placeholder="Categoria" required />
+      </div>
+      <input name="titulo" placeholder="Título do item" required />
+      <input name="vendedor" placeholder="Vendedor" required />
+      <div class="grid-2">
+        <input name="lanceInicial" type="number" placeholder="Lance inicial (R$)" required />
+        <input name="incrementoMinimo" type="number" placeholder="Incremento mínimo (R$)" required />
+      </div>
+      <input name="horario" placeholder="Horário (ex: Hoje, 21:00)" required />
+      <div class="form-actions">
+        <button type="button" class="btn-cancelar" id="btn-cancelar-form">Cancelar</button>
+        <button type="submit" class="btn-salvar">Salvar leilão</button>
+      </div>
+      <p class="form-error" id="novo-leilao-error" style="display:none"></p>
+    </form>
+  `;
+
+  document.getElementById("btn-cancelar-form").addEventListener("click", () => {
+    state.formAberto = false;
+    renderFormNovoLeilao();
+  });
+
+  document.getElementById("novo-leilao-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const dados = Object.fromEntries(new FormData(form).entries());
+    const errorEl = document.getElementById("novo-leilao-error");
+    try {
+      await apiCriarLeilao(dados);
+      state.formAberto = false;
+      await carregarCatalogo();
+    } catch (err) {
+      errorEl.textContent = err.message;
+      errorEl.style.display = "block";
+    }
+  });
+}
+
+// ---------- leilão ao vivo ----------
+
 async function abrirLeilao(id) {
   state.leilaoAtivo = state.leiloes.find((l) => l.id === id);
-  state.lances = id === 1 ? await fetchLances() : [];
   goTo("live");
   renderLive();
 }
@@ -99,28 +232,13 @@ function renderLive() {
           aoVivo
             ? `<form class="bid-form" id="bid-form">
                 <input type="number" id="bid-input" placeholder="${l.lanceAtual + l.incrementoMinimo}" />
-                <button type="submit">Dar lance</button>
+                <button type="submit" id="bid-submit">Dar lance</button>
               </form>
               <p class="bid-error" id="bid-error" style="display:none"></p>`
             : `<p class="incremento" style="margin-top:16px">${
                 l.status === "agendado" ? "Transmissão ainda não iniciada." : "Este leilão já foi encerrado."
               }</p>`
         }
-
-        <div class="bid-history">
-          <h3>Histórico de lances</h3>
-          <ul id="bid-history-list">
-            ${
-              state.lances.length
-                ? state.lances
-                    .map(
-                      (b) => `<li><span class="u">${b.usuario}</span><span class="v">${fmt(b.valor)}</span><span class="t">${b.horario}</span></li>`
-                    )
-                    .join("")
-                : `<li class="t">Sem lances registrados ainda.</li>`
-            }
-          </ul>
-        </div>
       </div>
     </div>
   `;
@@ -135,34 +253,36 @@ function renderLive() {
   }
 }
 
-function darLance() {
+async function darLance() {
   const l = state.leilaoAtivo;
   const input = document.getElementById("bid-input");
   const errorEl = document.getElementById("bid-error");
+  const submitBtn = document.getElementById("bid-submit");
   const valor = Number(input.value);
-  const minimo = l.lanceAtual + l.incrementoMinimo;
 
-  if (!valor || valor < minimo) {
-    errorEl.textContent = `Informe um valor de pelo menos ${fmt(minimo)}.`;
-    errorEl.style.display = "block";
-    return;
-  }
   errorEl.style.display = "none";
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Enviando...";
 
-  const agora = new Date();
-  const horario = agora.toLocaleTimeString("pt-BR", { hour12: false });
+  try {
+    const atualizado = await apiAtualizarLance(l.id, valor);
+    state.leilaoAtivo = atualizado;
 
-  l.lanceAtual = valor;
-  state.lances.unshift({ usuario: "Você", valor, horario });
+    const idx = state.leiloes.findIndex((x) => x.id === atualizado.id);
+    if (idx !== -1) state.leiloes[idx] = atualizado;
 
-  document.getElementById("valor-atual").textContent = fmt(valor);
-  document.getElementById("bid-history-list").innerHTML = state.lances
-    .map(
-      (b) => `<li><span class="u">${b.usuario}</span><span class="v">${fmt(b.valor)}</span><span class="t">${b.horario}</span></li>`
-    )
-    .join("");
-  input.value = "";
+    document.getElementById("valor-atual").textContent = fmt(atualizado.lanceAtual);
+    input.value = "";
+  } catch (err) {
+    errorEl.textContent = err.message;
+    errorEl.style.display = "block";
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Dar lance";
+  }
 }
+
+// ---------- navegação ----------
 
 function goTo(view) {
   document.querySelectorAll(".view").forEach((v) => v.classList.remove("active"));
@@ -179,11 +299,10 @@ async function init() {
   });
 
   try {
-    state.leiloes = await fetchLeiloes();
-    renderCatalogo();
+    await carregarCatalogo();
   } catch (err) {
     document.getElementById("catalogo-list").innerHTML =
-      `<p class="empty">Não foi possível carregar os leilões (${err.message}). Verifique o endpoint configurado em AZURE_FUNCTION_BASE_URL.</p>`;
+      `<p class="empty">Não foi possível carregar os leilões (${err.message}).</p>`;
   }
 }
 

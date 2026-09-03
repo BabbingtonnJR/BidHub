@@ -104,12 +104,110 @@ main {
 
 .lote-row {
   display: grid;
-  grid-template-columns: 56px 64px 1fr auto auto;
+  grid-template-columns: 56px 64px 1fr auto auto 28px;
   align-items: center;
   gap: 20px;
   padding: 20px 4px;
   border-bottom: 1px solid var(--border-soft);
   cursor: pointer;
+}
+
+.btn-excluir {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ivory-dim);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.btn-excluir:hover {
+  border-color: var(--burgundy);
+  color: #e6a3a3;
+}
+
+.btn-novo {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--ivory);
+  font-size: 13px;
+  padding: 9px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  margin-bottom: 18px;
+}
+
+.btn-novo:hover { border-color: var(--brass-dim); }
+
+.novo-leilao-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 22px;
+}
+
+.novo-leilao-form .grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.novo-leilao-form input {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--ivory);
+  font-size: 14px;
+  padding: 10px 12px;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+}
+
+.novo-leilao-form input:focus {
+  outline: none;
+  border-color: var(--brass-dim);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.form-actions button {
+  border-radius: var(--radius);
+  padding: 9px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-cancelar {
+  background: transparent;
+  border: 1px solid var(--border) !important;
+  color: var(--ivory-dim);
+}
+
+.btn-salvar {
+  background: var(--brass);
+  color: #1b1204;
+  font-weight: 600;
+}
+
+.btn-salvar:hover { background: var(--brass-text); }
+
+.form-error {
+  font-size: 12px;
+  color: #e6a3a3;
+  margin: 0;
 }
 
 .lote-row:hover { background: var(--surface); }
@@ -162,6 +260,40 @@ main {
   padding: 5px 12px;
   border-radius: 100px;
   white-space: nowrap;
+}
+
+.status-select {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.status-select.ao-vivo {
+  background: var(--burgundy-bg);
+  color: #e6a3a3;
+  border-color: transparent;
+}
+
+.status-select.agendado {
+  background: var(--surface-2);
+  color: var(--ivory-dim);
+}
+
+.status-select.encerrado {
+  background: var(--green-bg);
+  color: #a8c9a3;
+  border-color: transparent;
+}
+
+.status-select option {
+  background: var(--surface-2);
+  color: var(--ivory);
 }
 
 .status-pill.ao-vivo {
