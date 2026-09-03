@@ -1,18 +1,4 @@
-/*
-  BidHub - frontend de demonstração (PJBL)
-
-  Endpoint GET esperado (Azure Function / mock Apidog):
-    GET {AZURE_FUNCTION_BASE_URL}/api/leiloes
-    -> retorna a lista de leilões no mesmo formato de data/leiloes.json
-
-  Troque AZURE_FUNCTION_BASE_URL pela URL publicada da sua Function,
-  ou pela URL de mock gerada no Apidog, antes de publicar no Static Web Apps.
-*/
-
-const AZURE_FUNCTION_BASE_URL = ""; // ex: "https://bidhub-func.azurewebsites.net"
-const ENDPOINT_LEILOES = AZURE_FUNCTION_BASE_URL
-  ? `${AZURE_FUNCTION_BASE_URL}/api/leiloes`
-  : "data/leiloes.json"; // fallback local, usado enquanto não há Function publicada
+const ENDPOINT_LEILOES = "/api/leiloes";
 
 const state = {
   leiloes: [],

@@ -10,4 +10,5 @@
 - Gabriel Carmo
 - Marcel Araújo
 
-**Repositório GitHub:** <coloque aqui o link do repositório>
+**Repositório GitHub:** 
+- https://github.com/BabbingtonnJR/BidHub
