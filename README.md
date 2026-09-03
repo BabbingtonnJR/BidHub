@@ -25,12 +25,10 @@ Em `js/app.js`, defina a constante `AZURE_FUNCTION_BASE_URL` com a URL da sua
 Function publicada (ex.: `https://bidhub-func.azurewebsites.net`). Enquanto
 essa variável estiver vazia, o app usa o mock local em `data/leiloes.json`.
 
-## Links do projeto
-
-- **Site publicado (Azure Static Web Apps):** <coloque aqui o link>
-- **Azure Function (GET /api/leiloes):** <coloque aqui o link>
-- **Mock no Apidog (se utilizado):** <coloque aqui o(s) link(s)>
-- **Repositório GitHub:** <coloque aqui o link>
+- **Site publicado (Azure Static Web Apps):** https://purple-pond-09f931c10.3.azurestaticapps.net
+- **Azure Function (GET /api/leiloes):** https://purple-pond-09f931c10.3.azurestaticapps.net/api/leiloes
+- **Mock no Apidog (se utilizado):** não utilizado — o GET obrigatório usa uma Azure Function real, integrada ao mesmo Static Web App
+- **Repositório GitHub:** https://github.com/BabbingtonnJR/BidHub
 
 ## Estrutura
 
