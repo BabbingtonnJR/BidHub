@@ -43,4 +43,3 @@ Depois de gerar o frontend, a IA também foi usada para:
 - Testes manuais das duas telas (catálogo e leilão ao vivo) via DevTools, para
   confirmar que os dados vêm da Azure Function e não de um arquivo local.
 
-## Observação
