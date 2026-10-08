@@ -39,6 +39,13 @@ bidhub/
 ├── js/app.js
 ├── data/leiloes.json   # mock local
 ├── data/lances.json    # mock do histórico de lances
+├── api/                # backend (Azure Functions) em Vertical Slice + Clean Architecture
+│   ├── src/features/   # uma pasta por caso de uso (listar, criar, atualizar, excluir)
+│   ├── src/domain/     # entidade Leilao, regras e porta ILeilaoRepository
+│   ├── src/infrastructure/  # MongoDB e adaptador HTTP
+│   ├── src/composition/     # injeção de dependências
+│   └── test/           # testes (npm test)
+├── docs/arquitetura-backend.md  # explicação e diagramas do backend
 ├── GRUPO.md
 ├── Prompt.md
 └── README.md

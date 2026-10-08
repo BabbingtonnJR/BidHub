@@ -43,3 +43,21 @@ Depois de gerar o frontend, a IA também foi usada para:
 - Testes manuais das duas telas (catálogo e leilão ao vivo) via DevTools, para
   confirmar que os dados vêm da Azure Function e não de um arquivo local.
 
+## TDE — refatoração do backend (Vertical Slice + Clean Architecture + SOLID)
+
+Branch: `refactor/vertical-slice-clean-architecture`
+
+Prompt usado:
+
+> Utilizar IA Generativa para aplicar o VERTICAL SLICE e CLEAN ARCHITECTURE e SOLID no backend da aplicação TDE 2.
+> Utilizar o código da aplicação que está sendo criada no TDE 2.
+>
+> Em documento PDF entregar:
+> - No arquivo deve constar o nome dos ALUNOS que auxiliou na tarefa, independente de ser atividade em grupo. (Descreva o que cada aluno realizou).
+> - Informar o GITHUB do projeto em uma nova branch.
+> - Informar todos os prompts utilizados para modificar a aplicação.
+> - Entregar diagrama de classes e componentes do BACKEND da aplicação em VERTICAL SLICE e CLEAN ARCHITECTURE e SOLID (gerar em markdown e imagem).
+>
+> https://github.com/BabbingtonnJR/BidHub
+
+Depois revisamos o código gerado, rodamos os testes e ajustamos os comentários e a documentação.

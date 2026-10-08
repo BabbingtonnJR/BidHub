@@ -1,0 +1,153 @@
+classDiagram
+  direction LR
+
+  namespace Feature_listar_leiloes {
+    class ListarLeiloesUseCase {
+      -leilaoRepository: ILeilaoRepository
+      +executar() Promise~object[]~
+    }
+    class listarLeiloes_function {
+      <<Azure Function GET /api/leiloes>>
+      +handler(request, context)
+    }
+  }
+  namespace Feature_criar_leilao {
+    class CriarLeilaoUseCase {
+      -leilaoRepository: ILeilaoRepository
+      +executar(dados) Promise~object~
+    }
+    class criarLeilao_function {
+      <<Azure Function POST /api/leiloes>>
+      +handler(request, context)
+    }
+  }
+  namespace Feature_atualizar_leilao {
+    class AtualizarLeilaoUseCase {
+      -leilaoRepository: ILeilaoRepository
+      +executar(id, lanceAtual_status) Promise~object~
+    }
+    class atualizarLeilao_function {
+      <<Azure Function PUT /api/leiloes/id>>
+      +handler(request, context)
+    }
+  }
+  namespace Feature_excluir_leilao {
+    class ExcluirLeilaoUseCase {
+      -leilaoRepository: ILeilaoRepository
+      +executar(id) Promise~object~
+    }
+    class excluirLeilao_function {
+      <<Azure Function DELETE /api/leiloes/id>>
+      +handler(request, context)
+    }
+  }
+
+  namespace Domain {
+    class Leilao {
+      <<Entity>>
+      +id: number
+      +lote: string
+      +titulo: string
+      +categoria: string
+      +vendedor: string
+      +lanceInicial: number
+      +lanceAtual: number
+      +incrementoMinimo: number
+      +status: StatusLeilao
+      +espectadores: number
+      +horario: string
+      +imagem: string
+      +criar(dados)$ Leilao
+      +lanceMinimo() number
+      +darLance(valor) void
+      +alterarStatus(status) void
+      +toJSON() object
+    }
+    class StatusLeilao {
+      <<enumeration>>
+      AO_VIVO
+      AGENDADO
+      ENCERRADO
+    }
+    class ILeilaoRepository {
+      <<interface>>
+      +listar() Promise~Leilao[]~
+      +buscarPorId(id) Promise~Leilao~
+      +proximoId() Promise~number~
+      +adicionar(leilao) Promise~void~
+      +atualizar(leilao) Promise~void~
+      +remover(id) Promise~boolean~
+    }
+    class DomainError {
+      +tipo: string
+    }
+    class ValidacaoError
+    class RegraDeNegocioError
+    class NaoEncontradoError
+  }
+
+  namespace Infrastructure {
+    class MongoConnection {
+      -uri: string
+      -dbName: string
+      +getDb() Promise~Db~
+    }
+    class MongoLeilaoRepository {
+      -connection: MongoConnection
+      +paraEntidade(doc)$ Leilao
+    }
+    class InMemoryLeilaoRepository {
+      -itens: Map
+    }
+    class httpHandler {
+      <<module>>
+      +comTratamentoDeErros(msg, handler)
+      +lerId(request) number
+      +lerCorpoJson(request) object
+    }
+  }
+
+  namespace Composition {
+    class container {
+      <<Composition Root>>
+      +criarContainer(opcoes)
+      +listarLeiloes() ListarLeiloesUseCase
+      +criarLeilao() CriarLeilaoUseCase
+      +atualizarLeilao() AtualizarLeilaoUseCase
+      +excluirLeilao() ExcluirLeilaoUseCase
+    }
+  }
+
+  DomainError <|-- ValidacaoError
+  DomainError <|-- RegraDeNegocioError
+  DomainError <|-- NaoEncontradoError
+  Leilao --> StatusLeilao
+  Leilao ..> RegraDeNegocioError : lança
+
+  ILeilaoRepository <|.. MongoLeilaoRepository : implementa
+  ILeilaoRepository <|.. InMemoryLeilaoRepository : implementa
+  MongoLeilaoRepository --> MongoConnection
+  MongoLeilaoRepository ..> Leilao : mapeia
+  InMemoryLeilaoRepository ..> Leilao : mapeia
+
+  ListarLeiloesUseCase --> ILeilaoRepository
+  CriarLeilaoUseCase --> ILeilaoRepository
+  AtualizarLeilaoUseCase --> ILeilaoRepository
+  ExcluirLeilaoUseCase --> ILeilaoRepository
+  CriarLeilaoUseCase ..> Leilao : cria
+  AtualizarLeilaoUseCase ..> Leilao : darLance / alterarStatus
+
+  listarLeiloes_function ..> container
+  criarLeilao_function ..> container
+  atualizarLeilao_function ..> container
+  excluirLeilao_function ..> container
+  listarLeiloes_function ..> httpHandler
+  criarLeilao_function ..> httpHandler
+  atualizarLeilao_function ..> httpHandler
+  excluirLeilao_function ..> httpHandler
+
+  container ..> MongoLeilaoRepository : instancia
+  container ..> ListarLeiloesUseCase : injeta repositório
+  container ..> CriarLeilaoUseCase : injeta repositório
+  container ..> AtualizarLeilaoUseCase : injeta repositório
+  container ..> ExcluirLeilaoUseCase : injeta repositório
