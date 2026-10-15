@@ -1,0 +1,26 @@
+{
+  "name": "bidhub-bff",
+  "version": "1.0.0",
+  "description": "Backend for Frontend do BidHub (Node/Express) organizado em Vertical Slice + Clean Architecture",
+  "type": "module",
+  "main": "src/main/server.js",
+  "scripts": {
+    "start": "node src/main/server.js",
+    "test": "vitest run",
+    "test:arch": "vitest run test/architecture",
+    "test:unit": "vitest run test/unit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "archunit": "^2.5.4",
+    "supertest": "^7.3.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  }
+}

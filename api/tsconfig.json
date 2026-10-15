@@ -1,0 +1,12 @@
+{
+  "//": "Usado apenas pelo ArchUnitTS para montar o grafo de dependências (o projeto é JavaScript, não há build).",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022"
+  },
+  "include": ["src/**/*"]
+}

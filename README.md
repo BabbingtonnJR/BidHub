@@ -39,7 +39,23 @@ bidhub/
 ├── js/app.js
 ├── data/leiloes.json   # mock local
 ├── data/lances.json    # mock do histórico de lances
+├── api/                # microsserviço de leilões (Azure Functions + MongoDB)
+├── bff/                # Backend for Frontend (Node/Express)
 ├── GRUPO.md
 ├── Prompt.md
 └── README.md
 ```
+
+## Backend: Vertical Slice + Clean Architecture
+
+Os dois projetos de backend (`api/` e `bff/`) são organizados em **vertical slices**
+(`src/features/<funcionalidade>/`) sobre um núcleo de **Clean Architecture**
+(`domain` → casos de uso → apresentação/infraestrutura → `main`). As regras de
+arquitetura são verificadas por testes unitários com **ArchUnitTS**:
+
+```bash
+cd api && npm install && npm run test:arch
+cd bff && npm install && npm run test:arch
+```
+
+Detalhes em [`api/README.md`](api/README.md) e [`bff/README.md`](bff/README.md).

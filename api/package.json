@@ -1,15 +1,24 @@
 {
-  "name": "",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/functions/*.js",
+  "name": "bidhub-leiloes-service",
+  "version": "2.0.0",
+  "description": "Microsserviço de leilões do BidHub (Azure Functions + MongoDB) organizado em Vertical Slice + Clean Architecture",
+  "type": "module",
+  "main": "src/features/*/*.function.js",
   "scripts": {
     "start": "func start",
-    "test": "echo \"No tests yet...\""
+    "seed": "node seed.js",
+    "test": "vitest run",
+    "test:arch": "vitest run test/architecture",
+    "test:unit": "vitest run test/unit"
   },
   "dependencies": {
     "@azure/functions": "^4.0.0",
     "dotenv": "^17.4.2",
     "mongodb": "^7.6.0"
+  },
+  "devDependencies": {
+    "archunit": "^2.5.4",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
   }
 }

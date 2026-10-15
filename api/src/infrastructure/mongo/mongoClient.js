@@ -1,9 +1,10 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+import { MongoClient, ServerApiVersion } from "mongodb";
 
 let client;
 let dbInstance;
 
-async function getDb() {
+/** Conexão única (reaproveitada entre execuções da Function). */
+export async function getDb() {
   if (dbInstance) return dbInstance;
 
   const uri = process.env.MONGODB_URI;
@@ -22,5 +23,3 @@ async function getDb() {
   dbInstance = client.db("bidhub");
   return dbInstance;
 }
-
-module.exports = { getDb };

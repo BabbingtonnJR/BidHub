@@ -1,5 +1,5 @@
-require("dotenv").config();
-const { MongoClient } = require("mongodb");
+import "dotenv/config";
+import { MongoClient } from "mongodb";
 
 const leiloesIniciais = [
   {
