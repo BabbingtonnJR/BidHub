@@ -24,6 +24,13 @@ export function criarApp(deps = {}) {
   app.use(express.json());
 
   app.get("/health", (_req, res) => res.json({ status: "ok" }));
+  app.get("/", (_req, res) =>
+    res.json({
+      servico: "BidHub BFF",
+      descricao: "Backend for Frontend da plataforma de leilões BidHub",
+      endpoints: ["GET /health", "GET /bff/catalogo", "GET /bff/leiloes/:id", "POST /bff/leiloes/:id/lances"],
+    })
+  );
   app.use(rotasCatalogo({ catalogoUseCase: new CatalogoUseCase(leiloesGateway) }));
   app.use(rotasLeilaoAoVivo({ leilaoAoVivoUseCase: new LeilaoAoVivoUseCase(leiloesGateway) }));
   app.use(rotasDarLance({ darLanceUseCase: new DarLanceUseCase(leiloesGateway) }));

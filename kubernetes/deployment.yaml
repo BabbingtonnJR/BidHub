@@ -1,0 +1,49 @@
+# Deployment do BidHub BFF no OpenShift (Red Hat Developer Sandbox)
+# Troque SEU_USUARIO_DOCKERHUB e SEU_NAMESPACE antes de aplicar.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bidhub-bff
+  namespace: SEU_NAMESPACE
+  labels:
+    app: bidhub-bff
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bidhub-bff
+  template:
+    metadata:
+      labels:
+        app: bidhub-bff
+    spec:
+      containers:
+        - name: api
+          image: SEU_USUARIO_DOCKERHUB/bidhub-bff:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: LEILOES_SERVICE_URL
+              value: https://purple-pond-09f931c10.3.azurestaticapps.net/api
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

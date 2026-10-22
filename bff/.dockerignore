@@ -1,0 +1,10 @@
+node_modules
+test
+.env
+.env.example
+*.md
+tsconfig.json
+vitest.config.js
+Dockerfile
+.dockerignore
+.git

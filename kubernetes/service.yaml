@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bidhub-bff
+  namespace: SEU_NAMESPACE
+  labels:
+    app: bidhub-bff
+spec:
+  selector:
+    app: bidhub-bff
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

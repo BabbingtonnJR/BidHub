@@ -1,0 +1,17 @@
+# Route do OpenShift: gera a URL pública https://bidhub-bff-SEU_NAMESPACE.apps....openshiftapps.com
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: bidhub-bff
+  namespace: SEU_NAMESPACE
+  labels:
+    app: bidhub-bff
+spec:
+  to:
+    kind: Service
+    name: bidhub-bff
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
